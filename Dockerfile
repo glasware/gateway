@@ -12,7 +12,7 @@ RUN GO111MODULE=on\
     -a\
     -installsuffix nocgo\
     -o gateway\
-    cmd/rest/*.go
+    *.go
 RUN upx --lzma ./gateway
 
 FROM alpine:3.8
@@ -21,5 +21,4 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /bin
 COPY --from=0 /build/gateway .
 COPY ./static ./static
-RUN ls ./static
 CMD ["gateway"]
