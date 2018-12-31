@@ -103,8 +103,7 @@ function handleInstructions(instruction) {
 		}
 	}
   window.WebSocket = window.WebSocket || window.MozWebSocket;
-//   var socketString = "ws://127.0.0.1:8080/api/connect";
-  var socketString = "ws://ingcr3at1on.online:8080/api/connect";
+  var socketString = "wss://ingcr3at1on.online:8080/api/connect";
   var connection = new WebSocket(socketString);
 
   connection.onopen = function () {
