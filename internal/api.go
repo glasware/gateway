@@ -8,12 +8,12 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/glasware/gateway/config"
+	glas "github.com/glasware/glas-core"
+	"github.com/glasware/glas-core/ansi"
+	pb "github.com/glasware/glas-core/proto"
 	"github.com/gogo/protobuf/jsonpb"
 	"github.com/gorilla/websocket"
-	"github.com/ingcr3at1on/glas"
-	"github.com/ingcr3at1on/glas/cmd/rest/config"
-	"github.com/ingcr3at1on/glas/internal/ansi"
-	pb "github.com/ingcr3at1on/glas/proto"
 	"github.com/justanotherorganization/l5424"
 	"github.com/justanotherorganization/l5424/x5424"
 	"github.com/labstack/echo"
@@ -24,15 +24,7 @@ var upgrader websocket.Upgrader
 
 func init() {
 	upgrader.CheckOrigin = func(req *http.Request) bool {
-		// if req.Host == "127.0.0.1" ||
-		// req.Host == "localhost" ||
-		// req.Host == "ingcr3at1on.online" ||
-		// req.Host == "eyeofmidas.net" {
-		// return true
-		// }
-		// FIXME: this is not good
 		return true
-		// return false
 	}
 }
 

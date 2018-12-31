@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ingcr3at1on/glas/cmd/rest/config"
-	"github.com/ingcr3at1on/glas/cmd/rest/internal"
+	"github.com/glasware/gateway/config"
+	"github.com/glasware/gateway/internal"
 	"github.com/labstack/echo"
 )
 

@@ -1,8 +1,8 @@
-# Glas
+# Glas API Gateway
 
-[![goreportcard](https://goreportcard.com/badge/github.com/ingcr3at1on/glas)](https://github.com/ingcr3at1on/glas)
+[![goreportcard](https://goreportcard.com/badge/github.com/glasware/gateware)](https://github.com/glasware/gateway)
 
-Telnet based MUD client framework. User-facing implementations can be found in the cmd package.
+API gateway for Glas
 
 Issues and pull requests are welcome.
 
