@@ -1,6 +1,6 @@
 # Glas API Gateway
 
-[![goreportcard](https://goreportcard.com/badge/github.com/glasware/gateware)](https://github.com/glasware/gateway)
+[![goreportcard](https://goreportcard.com/badge/github.com/glasware/gateway)](https://github.com/glasware/gateway)
 
 API gateway for Glas
 
