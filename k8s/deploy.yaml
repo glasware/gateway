@@ -10,7 +10,7 @@ spec:
         app: glas
     spec:
       containers:
-      - image: glasware/gateway:v0.0.0-alpha2
+      - image: glasware/gateway:v0.0.0-alpha3
         imagePullPolicy: Always
         name: glas
         ports:

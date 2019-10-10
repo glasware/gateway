@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/url"
@@ -10,6 +12,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	pb "github.com/glasware/glas-core/proto"
+	"github.com/gogo/protobuf/jsonpb"
 	"github.com/gorilla/websocket"
 )
 
@@ -30,7 +34,7 @@ func _main() error {
 		return fmt.Errorf(usage, os.Args[0])
 	}
 
-	_url := url.URL{Scheme: "ws", Host: args[0], Path: "/api/connect"}
+	_url := url.URL{Scheme: "wss", Host: args[0], Path: "/api/connect"}
 	fmt.Println("dialing " + _url.String())
 	conn, _, err := websocket.DefaultDialer.Dial(_url.String(), nil)
 	if err != nil {
@@ -42,7 +46,15 @@ func _main() error {
 	go func() {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			err = conn.WriteMessage(websocket.TextMessage, scanner.Bytes())
+			byt, err := json.Marshal(&pb.Input{
+				Data: scanner.Text(),
+			})
+			if err != nil {
+				errCh <- err
+				return
+			}
+
+			err = conn.WriteMessage(websocket.TextMessage, byt)
 			if err != nil {
 				errCh <- err
 				return
@@ -64,7 +76,16 @@ func _main() error {
 				return
 			}
 
-			fmt.Print(string(byt))
+			var out pb.Output
+			err = jsonpb.Unmarshal(bytes.NewReader(byt), &out)
+			if err != nil {
+				errCh <- err
+				return
+			}
+
+			if out.Type != pb.Output_INSTRUCTION {
+				fmt.Print(out.Data)
+			}
 		}
 	}()
 

@@ -1,12 +1,11 @@
-FROM golang:1.11.4-alpine3.8
+FROM golang:1.13.1-alpine3.10
 RUN apk --no-cache add \
     gcc\
     git\
     upx
 WORKDIR /build
 COPY . ./
-RUN GO111MODULE=on\
-    CGO_ENABLED=0\
+RUN CGO_ENABLED=0\
     go build\
     -ldflags="-s -w"\
     -a\
@@ -15,7 +14,7 @@ RUN GO111MODULE=on\
     *.go
 RUN upx --lzma ./gateway
 
-FROM alpine:3.8
+FROM alpine:3.10
 RUN apk --no-cache add ca-certificates
 RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /bin
