@@ -5,43 +5,34 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/glasware/gateway/config"
 	"github.com/glasware/gateway/internal"
-	"github.com/labstack/echo"
+	"github.com/ingcr3at1on/x/sigctx"
+	"github.com/labstack/echo/v4"
 )
 
-// Wrap our functionality to allow defer to work with exit.
-func _main() error {
+func main() {
 	e := echo.New()
 
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	if err := sigctx.StartWith(func(ctx context.Context) error {
+		if err := internal.SetupRoutes(new(config.Config), e.Group("/api")); err != nil {
+			return err
+		}
 
-	go func() {
-		<-sc
-		fmt.Println("shutting down")
-		e.Shutdown(context.Background())
-	}()
+		// FIXME: make this path more friendly...
+		// e.Static("/", "./static/terminal.html")
 
-	if err := internal.SetupRoutes(new(config.Config), e.Group("/api")); err != nil {
-		return err
-	}
-
-	// FIXME: make this path more friendly...
-	e.Static("/", "./static/terminal.html")
-
-	addr := ":8080"
-	return e.Start(addr)
-}
-
-func main() {
-	if err := _main(); err != nil {
+		addr := ":8080"
+		return e.Start(addr)
+	}); err != nil {
 		if err != http.ErrServerClosed {
-			fmt.Fprintln(os.Stderr, err.Error())
+			fmt.Println(err.Error())
 			os.Exit(1)
 		}
+	}
+
+	if err := e.Shutdown(context.Background()); err != nil {
+		fmt.Println(err.Error())
 	}
 }
