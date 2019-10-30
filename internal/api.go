@@ -16,7 +16,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/justanotherorganization/l5424"
 	"github.com/justanotherorganization/l5424/x5424"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 )
 
@@ -65,9 +65,10 @@ func makeConnectHandler(cfg *config.Config) echo.HandlerFunc {
 			for {
 				out := <-outCh
 				if out != nil {
-					// FIXME: I really don't like this way of breaking out ANSI instructions
-					// into something to pass over the websocket...
-					out.Data = ansi.ReplaceCodes(out.Data)
+					if p := c.QueryParam("replace"); p == "true" || p == `` {
+						out.Data = ansi.ReplaceCodes(out.Data)
+					}
+
 					if strings.HasPrefix(out.Data, ansi.Instruction) {
 						out.Type = pb.Output_INSTRUCTION
 						fields := strings.Split(out.Data, ansi.Separator)
